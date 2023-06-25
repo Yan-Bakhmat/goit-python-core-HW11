@@ -15,9 +15,10 @@ class AddressBook(UserDict):
 
 
 class Record:
-    def __init__(self, Name, Phones=None):
+    def __init__(self, Name, Phones=None, Birthday=None):
         self.Name = Name
         self.Phones = Phones
+        self.Birthday = Birthday
 
     def add_phone(self, Phone):
         self.Phones.phone = list(set(self.Phones.phone) | set(Phone.phone))
@@ -30,6 +31,12 @@ class Record:
     def delite_phone(self, Phone):
         self.Phones.phone = list(set(self.Phones.phone) - set(Phone.phone))
         return "Done!"
+
+    def days_to_birthday(self):
+        if self.Birthday:
+            pass
+        else:
+            return "The birthsay date is unknown."
 
 
 class Field:
@@ -50,7 +57,8 @@ class Phone(Field):
 
 
 class Birthday(Field):
-    pass
+    def __init__(self, birthday):
+        super().__init__(birthday)
 
 
 CONTACTS = AddressBook()
