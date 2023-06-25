@@ -2,6 +2,23 @@ from collections import UserDict
 from datetime import datetime, timedelta
 
 
+class Iterable:
+    def __init__(self, N):
+        self.current_value = 0
+        self.N = N
+
+    def __next__(self):
+        if self.current_value < self.N:
+            self.current_value += 1
+            return self.current_value
+        raise StopIteration
+
+
+class Iterator:
+    def __iter__(self, N):
+        return Iterable(N)
+
+
 class AddressBook(UserDict):
     def add_record(self, Record):
         self.update({Record.Name.name: Record})
@@ -10,7 +27,8 @@ class AddressBook(UserDict):
     def show_number(self, Name):
         return self.data[Name.name].Phones.phone
 
-    def show_all(self):
+    def show_all(self, N=None):
+        self.N = N if N else len(self.data)
         for name, numbers in self.data.items():
             yield f'{name}: {numbers.Phones.phone}'
 
