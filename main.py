@@ -1,4 +1,5 @@
 from collections import UserDict
+from datetime import datetime, timedelta
 
 
 class AddressBook(UserDict):
@@ -34,7 +35,7 @@ class Record:
 
     def days_to_birthday(self):
         if self.Birthday:
-            pass
+            current_datetime = datetime.now()
         else:
             return "The birthsay date is unknown."
 
