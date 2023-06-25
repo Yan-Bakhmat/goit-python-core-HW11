@@ -49,6 +49,10 @@ class Phone(Field):
         super().__init__(phone)
 
 
+class Birthday(Field):
+    pass
+
+
 CONTACTS = AddressBook()
 
 
