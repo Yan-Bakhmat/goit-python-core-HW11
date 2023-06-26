@@ -2,9 +2,9 @@ from collections import UserDict
 from datetime import datetime
 import re
 
-'''
+
 class Iterable:
-    def __init__(self, N):
+    def __init__(self, N=None):
         self.current_value = 0
         self.N = N
 
@@ -15,12 +15,6 @@ class Iterable:
         raise StopIteration
 
 
-class Iterator:
-    def __iter__(self, N):
-        return Iterable(N)
-'''
-
-
 class AddressBook(UserDict):
     def add_record(self, Record):
         self.update({Record.Name.name: Record})
@@ -29,10 +23,15 @@ class AddressBook(UserDict):
     def show_number(self, Name):
         return self.data[Name.name].Phones.phone
 
-    def show_all(self, N=None):
-        self.N = N if N else len(self.data)
+    def show_all(self):
         for name, numbers in self.data.items():
             yield f'{name}: {numbers.Phones.phone}'
+
+    def __iter__(self):
+        return Iterable(N)
+
+    def iterator(self, N=None):
+        N = len(self.data) if not N else N
 
 
 class Record:
