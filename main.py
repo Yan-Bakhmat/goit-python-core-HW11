@@ -17,12 +17,6 @@ class Iterable:
 
 
 class AddressBook(UserDict):
-    #    def __init__(self, N=None):
-    #        self.N = N
-
-    #    def __iter__(self):
-    #        return Iterable(len(self), self.N)
-
     def add_record(self, Record):
         self.update({Record.Name.name: Record})
         return "Done!"
@@ -30,8 +24,12 @@ class AddressBook(UserDict):
     def show_number(self, Name):
         return self.data[Name.name].Phones.phone
 
-#    def iterator(self, N=None):
-#        N = len(self.data) if not N else N
+    def iterator(self, N=None):
+        index = 0
+        N = len(self.data) if not N else N
+        while index < len(self.data):
+            yield list(self.data)[index: index + N]
+            index += N
 
     def show_all(self):
         for name, numbers in self.data.items():
