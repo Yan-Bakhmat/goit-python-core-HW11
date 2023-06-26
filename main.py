@@ -1,8 +1,8 @@
 from collections import UserDict
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 
-
+'''
 class Iterable:
     def __init__(self, N):
         self.current_value = 0
@@ -18,6 +18,7 @@ class Iterable:
 class Iterator:
     def __iter__(self, N):
         return Iterable(N)
+'''
 
 
 class AddressBook(UserDict):
@@ -53,17 +54,26 @@ class Record:
         return "Done!"
 
     def days_to_birthday(self):
-        if self.Birthday:
+        if self.Birthday.birthday:
             current_datetime = datetime.now()
+            birthday = datetime.strptime(self.Birthday.birthday, '%d/%m/%Y')
+            if int(current_datetime.month) > int(birthday.month) or int(current_datetime.month) == int(birthday.month) and int(current_datetime.day) >= int(birthday.day):
+                next_birthday = datetime(
+                    year=current_datetime.year+1, month=birthday.month, day=birthday.day)
+                return (next_birthday - current_datetime).days
+            else:
+                next_birthday = datetime(
+                    year=current_datetime.year, month=birthday.month, day=birthday.day)
+                return (next_birthday - current_datetime).days
         else:
             return "The birthsay date is unknown."
 
 
 class Field:
-    def __init__(self, name_and_number):
-        name_and_number = name_and_number.split(' ')
-        self.name = name_and_number[0]
-        self.phone = name_and_number[1:]
+    def __init__(self, data):
+        self.name = ' '.join(re.findall('[a-z]+', data))
+        self.phone = re.findall('\d+', data)
+        self.birthday = ''.join(re.findall('\d{2}\/\d{2}\/\d{4}', data))
 
 
 class Name(Field):
@@ -74,6 +84,20 @@ class Name(Field):
 class Phone(Field):
     def __init__(self, phone):
         super().__init__(phone)
+
+
+'''
+    @property
+    def phone(self):
+        return self.__phone
+
+    @phone.setter
+    def value(self, new_phone):
+        if 12 <= new_phone >= 10:
+            self.__phone = new_phone
+        else:
+            print('The number must contain from 10 to 12 digits')
+'''
 
 
 class Birthday(Field):
@@ -122,7 +146,8 @@ def main():
                 print(CONTACTS.data[Name(command).name].add_phone(
                     Phone(command)))
             else:
-                print(CONTACTS.add_record(Record(Name(command), Phone(command))))
+                print(CONTACTS.add_record(
+                    Record(Name(command), Phone(command), Birthday(command))))
         elif "change" in command:
             command = command.removeprefix('change ')
             print(CONTACTS.data[Name(command).name].change_phone(
@@ -140,6 +165,10 @@ def main():
                     print(contact)
             else:
                 print('The contact list is empty.')
+        elif "birthday" in command:
+            command = command.removeprefix("birthday ")
+            print(
+                f'In {CONTACTS.data[Name(command).name].days_to_birthday()} days')
         elif command in ("good bye", "bye", "close", "exit"):
             print(close())
             bot_status = False
