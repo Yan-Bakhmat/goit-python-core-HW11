@@ -64,7 +64,7 @@ class Record:
             else:
                 next_birthday = datetime(
                     year=current_datetime.year, month=birthday.month, day=birthday.day)
-                return (next_birthday - current_datetime).days
+                return f"In {(next_birthday - current_datetime).days} days"
         else:
             return "The birthsay date is unknown."
 
@@ -167,8 +167,7 @@ def main():
                 print('The contact list is empty.')
         elif "birthday" in command:
             command = command.removeprefix("birthday ")
-            print(
-                f'In {CONTACTS.data[Name(command).name].days_to_birthday()} days')
+            print(CONTACTS.data[Name(command).name].days_to_birthday())
         elif command in ("good bye", "bye", "close", "exit"):
             print(close())
             bot_status = False
