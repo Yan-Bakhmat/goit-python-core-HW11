@@ -4,18 +4,25 @@ import re
 
 
 class Iterable:
-    def __init__(self, N=None):
+    def __init__(self, len_dict, N=None):
         self.current_value = 0
+        self.len_dict = len_dict
         self.N = N
 
     def __next__(self):
-        if self.current_value < self.N:
+        if self.current_value < self.len_dict:
             self.current_value += 1
             return self.current_value
         raise StopIteration
 
 
 class AddressBook(UserDict):
+    #    def __init__(self, N=None):
+    #        self.N = N
+
+    #    def __iter__(self):
+    #        return Iterable(len(self), self.N)
+
     def add_record(self, Record):
         self.update({Record.Name.name: Record})
         return "Done!"
@@ -23,15 +30,12 @@ class AddressBook(UserDict):
     def show_number(self, Name):
         return self.data[Name.name].Phones.phone
 
+#    def iterator(self, N=None):
+#        N = len(self.data) if not N else N
+
     def show_all(self):
         for name, numbers in self.data.items():
             yield f'{name}: {numbers.Phones.phone}'
-
-    def __iter__(self):
-        return Iterable(N)
-
-    def iterator(self, N=None):
-        N = len(self.data) if not N else N
 
 
 class Record:
@@ -82,26 +86,41 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, phone):
+        self.__phone = None
         super().__init__(phone)
 
-
-'''
     @property
     def phone(self):
         return self.__phone
 
     @phone.setter
-    def value(self, new_phone):
-        if 12 <= new_phone >= 10:
-            self.__phone = new_phone
-        else:
-            print('The number must contain from 10 to 12 digits')
-'''
+    def phone(self, phone):
+        correct_numbers = []
+        for number in phone:
+            if 10 <= len(number) <= 12:
+                correct_numbers.append(number)
+                print(correct_numbers)
+        self.__phone = correct_numbers
 
 
 class Birthday(Field):
     def __init__(self, birthday):
+        self.__birthday = None
         super().__init__(birthday)
+
+    @property
+    def birthday(self):
+        return self.__birthday
+
+    @birthday.setter
+    def birthday(self, birthday):
+        try:
+            test = datetime.strptime(birthday, '%d/%m/%Y')
+            current_datetime = datetime.now()
+            if (current_datetime - test).days > 0:
+                self.__birthday = birthday
+        except:
+            pass
 
 
 CONTACTS = AddressBook()
